@@ -4,50 +4,332 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SmartList | Gizlilik Politikası</title>
+  <meta name="description" content="SmartList YouTube Oynatma Listesi Otomasyonu Gizlilik Politikası ve Veri Güvenliği Prensipleri.">
+
+  <!-- Font ve İkon Desteği -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
   <style>
-    body { font-family: system-ui, sans-serif; line-height: 1.6; max-width: 42rem; margin: 0 auto; padding: 2rem 1rem; color: #1f2933; background: #fff; }
-    a { color: #0b5cad; }
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(22, 30, 49, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.15);
+      --badge-bg: rgba(56, 189, 248, 0.1);
+      --code-bg: rgba(15, 23, 42, 0.6);
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+      line-height: 1.7;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.08) 0px, transparent 50%);
+    }
+
+    .container {
+      max-width: 820px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Kart Yapısı */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    /* Başlık Alanı */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 20px;
+    }
+
+    .header-info h1 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+      background: linear-gradient(to right, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-info h1 i {
+      color: var(--accent);
+      -webkit-text-fill-color: initial;
+    }
+
+    .header-info .update-date {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .nav-btn:hover {
+      background: var(--badge-bg);
+      color: var(--accent);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* Bölüm Başlıkları */
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 24px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+
+    .section-title:first-of-type {
+      margin-top: 8px;
+    }
+
+    .section-title i {
+      color: var(--accent);
+      font-size: 1rem;
+    }
+
+    /* Metin & Vurgular */
+    p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+    }
+
+    strong {
+      color: var(--text);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    a:hover {
+      text-decoration: underline;
+      color: #ffffff;
+    }
+
+    /* Listeler */
+    ul {
+      list-style: none;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    li {
+      position: relative;
+      padding-left: 24px;
+      color: var(--text-muted);
+      font-size: 0.93rem;
+    }
+
+    li::before {
+      content: "•";
+      position: absolute;
+      left: 8px;
+      top: 0;
+      color: var(--accent);
+      font-size: 1.2rem;
+      line-height: 1.6;
+    }
+
+    /* Kod Vurgusu */
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      color: var(--accent);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    /* Bilgi / Dikkat Kutusu */
+    .highlight-card {
+      background: rgba(56, 189, 248, 0.04);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin: 16px 0;
+    }
+
+    .highlight-card p {
+      margin: 0;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    /* Altbilgi */
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      padding: 10px 4px;
+      border-top: 1px solid var(--card-border);
+    }
   </style>
 </head>
 <body>
-  <h1>SmartList Gizlilik Politikası</h1>
-  <p>Son güncelleme: 4 Kasım 2026</p>
 
-  <p>SmartList, kullanıcının kendi bilgisayarında çalışan bir araçtır. Geliştiricinin SmartList verilerini topladığı bir sunucu yoktur.</p>
+  <div class="container">
+    
+    <!-- Başlık & Navigasyon -->
+    <div class="card">
+      <div class="header">
+        <div class="header-info">
+          <h1><i class="fa-solid fa-shield-halved"></i> Gizlilik Politikası</h1>
+          <div class="update-date">
+            <i class="fa-regular fa-clock"></i> Son güncelleme: 4 Kasım 2026
+          </div>
+        </div>
+        <a href="index.html" class="nav-btn">
+          <i class="fa-solid fa-arrow-left"></i> SmartList'e Dön
+        </a>
+      </div>
 
-  <h2>Erişilen veriler</h2>
-  <p>SmartList, kullanıcının izniyle YouTube Data API üzerinden <code>https://www.googleapis.com/auth/youtube</code> kapsamını kullanır. Bu izinle:</p>
-  <ul>
-    <li>Kanal, video ve oynatma listesi bilgilerini okur.</li>
-    <li>Kullanıcının hesabında oynatma listesi oluşturur.</li>
-    <li>Bu listelere video ekler.</li>
-  </ul>
+      <div class="highlight-card" style="margin-top: 20px;">
+        <p>
+          <strong>Kişisel Veri Bağımsızlığı:</strong> SmartList, doğrudan kullanıcının kendi yerel bilgisayarında çalışan açık kaynaklı bir araçtır. Geliştiricinin uygulama verilerini topladığı, aktardığı veya işlediği merkezi bir sunucu bulunmamaktadır.
+        </p>
+      </div>
 
-  <h2>Verilerin saklanması</h2>
-  <p>Aşağıdaki bilgiler yalnızca kullanıcının bilgisayarında saklanır:</p>
-  <ul>
-    <li>Google oturum belirteçleri (OAuth token)</li>
-    <li>Kanal, oynatma listesi ve video kimlikleri ile başlıkları</li>
-    <li>Filtre kuralları ve günlük API kota kullanımı</li>
-  </ul>
+      <!-- 1. Erişilen Veriler -->
+      <div class="section-title">
+        <i class="fa-solid fa-key"></i> Erişilen Veriler
+      </div>
+      <p>
+        SmartList, kullanıcının açık onayı doğrultusunda YouTube Data API v3 üzerinden <code>https://www.googleapis.com/auth/youtube</code> yetkilendirme kapsamını (scope) kullanır. Bu izin yalnızca şu amaçlar için işletilir:
+      </p>
+      <ul>
+        <li>Kullanıcının belirlediği kanallara ait video ve oynatma listesi meta verilerini sorgulamak.</li>
+        <li>Kullanıcının kendi YouTube kütüphanesinde yeni oynatma listeleri oluşturmak.</li>
+        <li>Filtreleme kriterlerine uyan videoları bu listelere eklemek.</li>
+      </ul>
 
-  <h2>Verilerin paylaşılması</h2>
-  <p>Veriler satılmaz, reklam amacıyla kullanılmaz ve üçüncü taraflarla paylaşılmaz. Uygulama, işlevlerini yerine getirmek için yalnızca Google ve YouTube hizmetleriyle iletişim kurar.</p>
-  <p>SmartList'in Google API'lerinden alınan bilgileri kullanımı, Sınırlı Kullanım gereksinimleri dahil olmak üzere <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Hizmetleri Kullanıcı Verileri Politikası</a>'na uygundur.</p>
+      <!-- 2. Saklama -->
+      <div class="section-title">
+        <i class="fa-solid fa-database"></i> Verilerin Saklanması
+      </div>
+      <p>Tüm oturum ve işlem verileri münhasıran kullanıcının yerel ortamında tutulur:</p>
+      <ul>
+        <li>Google oturum anahtarları ve yetki belirteçleri (OAuth token)</li>
+        <li>Takip edilen kanal ID'leri, oynatma listeleri ve video kimlik bilgileri</li>
+        <li>Kullanıcı tarafından yapılandırılan filtre kuralları ve günlük API kota sayaçları</li>
+      </ul>
 
-  <h2>YouTube ve Google koşulları</h2>
-  <p>SmartList, YouTube API Hizmetlerini kullanır. Uygulamayı kullanarak <a href="https://www.youtube.com/t/terms">YouTube Hizmet Şartları</a>'nı kabul etmiş olursunuz. Google'ın veri işleme yöntemleri için <a href="https://policies.google.com/privacy">Google Gizlilik Politikası</a>'na bakabilirsiniz.</p>
+      <!-- 3. Paylaşım -->
+      <div class="section-title">
+        <i class="fa-solid fa-share-nodes"></i> Verilerin Paylaşılması
+      </div>
+      <p>
+        Toplanan veya işlenen veriler asla satılmaz, reklam ağlarıyla paylaşılmaz ve ticari amaçla kullanılmaz. Uygulama, temel işlevlerini yürütmek adına yalnızca doğrudan Google ve YouTube API uç noktaları ile güvenli (HTTPS) iletişim kurar.
+      </p>
+      <p>
+        SmartList'in Google API'lerinden edindiği bilgileri kullanımı, Sınırlı Kullanım (Limited Use) gereksinimleri dahil olmak üzere <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer">Google API Hizmetleri Kullanıcı Verileri Politikası</a> hükümlerine tam uyumludur.
+      </p>
 
-  <h2>Erişimi kaldırma ve verileri silme</h2>
-  <ul>
-    <li>SmartList'in erişimini <a href="https://myaccount.google.com/permissions">Google hesap izinleri</a> sayfasından istediğiniz zaman kaldırabilirsiniz.</li>
-    <li>Yerel verileri silmek için uygulamanın token ve veritabanı dosyalarını bilgisayarınızdan silebilirsiniz.</li>
-    <li>YouTube hesabınızda oluşturulan oynatma listeleri otomatik silinmez; bunları YouTube üzerinden silebilirsiniz.</li>
-  </ul>
+      <!-- 4. Koşullar -->
+      <div class="section-title">
+        <i class="fa-brands fa-youtube"></i> YouTube ve Google Koşulları
+      </div>
+      <p>
+        SmartList, YouTube API Hizmetlerini temel alır. Uygulamayı çalıştırarak <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer">YouTube Hizmet Şartları</a>'nı kabul etmiş sayılırsınız. Google'ın genel veri işleme ve güvenlik prensipleri için <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google Gizlilik Politikası</a>'nı inceleyebilirsiniz.
+      </p>
 
-  <h2>İletişim</h2>
-  <p>Sorularınız için <a href="https://github.com/olgunugurlu">GitHub profili</a> üzerinden geliştiriciye ulaşabilirsiniz.</p>
+      <!-- 5. Silme & Kaldırma -->
+      <div class="section-title">
+        <i class="fa-solid fa-trash-can"></i> Erişimi Kaldırma ve Verileri Silme
+      </div>
+      <ul>
+        <li>SmartList'e verilen hesap erişim izinlerini dilediğiniz an <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer">Google Hesap İzinleri</a> konsolu üzerinden geri alabilirsiniz.</li>
+        <li>Yerel verileri silmek için bilgisayarınızdaki oturum token (`token.json`) ve yerel veritabanı dosyalarını silmeniz yeterlidir.</li>
+        <li>YouTube hesabınızda oluşturulan listeler silinmez; bunları YouTube arayüzü üzerinden dilediğiniz an yönetebilir veya silebilirsiniz.</li>
+      </ul>
 
-  <p><a href="index.html">SmartList ana sayfasına dön</a></p>
+      <!-- 6. İletişim -->
+      <div class="section-title">
+        <i class="fa-regular fa-envelope"></i> İletişim
+      </div>
+      <p>
+        Gizlilik politikası veya uygulama mimarisine ilişkin tüm soru ve geri bildirimleriniz için <a href="https://github.com/olgunugurlu" target="_blank" rel="noopener noreferrer">GitHub Profili</a> üzerinden iletişime geçebilirsiniz.
+      </p>
+    </div>
+
+    <!-- Altbilgi -->
+    <footer>
+      <div>
+        <a href="index.html"><i class="fa-solid fa-arrow-left"></i> SmartList Tanıtım Sayfası</a>
+      </div>
+      <div>
+        Geliştirici: <a href="https://github.com/olgunugurlu" target="_blank">Olgun Uğurlu</a>
+      </div>
+    </footer>
+
+  </div>
+
 </body>
 </html>
