@@ -5,29 +5,325 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SmartList | YouTube Oynatma Listesi Otomasyonu</title>
   <meta name="description" content="SmartList, seçilen YouTube kanallarındaki videoları kurallara göre süzerek kullanıcının kendi hesabındaki oynatma listelerine ekleyen kişisel bir otomasyon aracıdır.">
+
+  <!-- Font ve İkon Desteği -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
   <style>
-    body { font-family: system-ui, sans-serif; line-height: 1.6; max-width: 42rem; margin: 0 auto; padding: 2rem 1rem; color: #1f2933; background: #fff; }
-    a { color: #0b5cad; }
-    footer { margin-top: 3rem; font-size: .9rem; color: #52606d; }
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(22, 30, 49, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.15);
+      --badge-bg: rgba(56, 189, 248, 0.1);
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+      line-height: 1.6;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.08) 0px, transparent 50%);
+    }
+
+    .container {
+      max-width: 820px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Kart Yapısı */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    /* Başlık Alanı */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 20px;
+    }
+
+    .header-info h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+      background: linear-gradient(to right, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-info h1 i {
+      color: #ef4444; /* YouTube kırmızı vurgusu */
+      -webkit-text-fill-color: initial;
+    }
+
+    .header-info .subtitle {
+      color: var(--accent);
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      background: var(--badge-bg);
+      color: var(--accent);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .lead-text {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-top: 18px;
+      line-height: 1.7;
+    }
+
+    /* Bölüm Başlıkları */
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .section-title i {
+      color: var(--accent);
+      font-size: 1rem;
+    }
+
+    /* Özellik Izgarası */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .feature-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transition: var(--transition);
+    }
+
+    .feature-item:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px -8px var(--accent-glow);
+    }
+
+    .feature-icon {
+      font-size: 1.1rem;
+      color: var(--accent);
+      background: var(--badge-bg);
+      padding: 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .feature-text {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .feature-text strong {
+      color: var(--text);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* Bilgi Kutusu */
+    .notice-box {
+      background: rgba(56, 189, 248, 0.05);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .notice-box strong {
+      color: var(--text);
+    }
+
+    .notice-box a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .notice-box a:hover {
+      color: #ffffff;
+    }
+
+    /* Altbilgi */
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      padding: 10px 4px;
+      border-top: 1px solid var(--card-border);
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
-  <h1>SmartList</h1>
-  <p>SmartList, seçilen YouTube kanallarındaki videoları kurallara göre süzen ve kullanıcının kendi YouTube hesabındaki oynatma listelerine ekleyen kişisel bir otomasyon aracıdır.</p>
 
-  <h2>Ne yapar?</h2>
-  <ul>
-    <li>Takip edilen kanallardaki yeni ve eski videoları tarar.</li>
-    <li>Videoları süre, anahtar kelime ve yükleme tarihine göre süzer.</li>
-    <li>Kullanıcının izniyle oynatma listesi oluşturur ve uygun videoları bu listelere ekler.</li>
-    <li>Daha önce eklenen videoları tekrar eklemez.</li>
-  </ul>
+  <div class="container">
+    
+    <!-- Başlık & Açıklama -->
+    <div class="card">
+      <div class="header">
+        <div class="header-info">
+          <h1><i class="fa-brands fa-youtube"></i> SmartList</h1>
+          <div class="subtitle">Akıllı YouTube Oynatma Listesi Otomasyonu</div>
+        </div>
+        <a href="../" class="back-btn">
+          <i class="fa-solid fa-arrow-left"></i> Ana Sayfaya Dön
+        </a>
+      </div>
+      <p class="lead-text">
+        SmartList, takip ettiğiniz YouTube kanallarındaki videoları belirlediğiniz kurallara göre süzerek doğrudan kendi YouTube hesabınızdaki oynatma listelerine organize eden kişisel bir otomasyon aracıdır.
+      </p>
+    </div>
 
-  <h2>Google hesabı neden gerekiyor?</h2>
-  <p>SmartList, oynatma listelerini kullanıcının kendi YouTube hesabında yönetebilmek için Google ile oturum açma izni ister. Bu verilerin nasıl kullanıldığı <a href="privacy.html">Gizlilik Politikası</a> sayfasında açıklanmıştır.</p>
+    <!-- Özellikler -->
+    <div class="card">
+      <div class="section-title">
+        <i class="fa-solid fa-bolt"></i> Ne Yapar?
+      </div>
+      <div class="features-grid">
+        
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+          <div class="feature-text">
+            <strong>Kanal Tarama</strong>
+            Seçilen kanallardaki yeni ve eski video içeriklerini periyodik olarak tarar.
+          </div>
+        </div>
 
-  <footer>
-    <p><a href="privacy.html">Gizlilik Politikası</a> · Geliştirici: <a href="https://github.com/olgunugurlu">Olgun Uğurlu</a></p>
-  </footer>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa-solid fa-filter"></i></div>
+          <div class="feature-text">
+            <strong>Kriter Filtresi</strong>
+            Videoları süre (dakika), başlık/açıklama anahtar kelimeleri ve yükleme tarihine göre süzer.
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa-solid fa-list-check"></i></div>
+          <div class="feature-text">
+            <strong>Otomatik Liste Yönetimi</strong>
+            Kullanıcı onayıyla yeni listeler açar ve filtrelenen videoları bu listelere ekler.
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="feature-text">
+            <strong>Mükerrer Kayıt Engeli</strong>
+            Daha önce eklenmiş videoları hafızada tutarak aynı videoyu tekrar eklemez.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Google İzinleri Bilgilendirmesi -->
+    <div class="card">
+      <div class="section-title">
+        <i class="fa-solid fa-lock"></i> Google Hesabı Neden Gerekiyor?
+      </div>
+      <div class="notice-box">
+        SmartList, oynatma listelerini doğrudan kullanıcının kendi YouTube kütüphanesinde oluşturup yönetebilmek için <strong>Google OAuth 2.0</strong> protokolü ile oturum açma yetkisi ister. Uygulama kişisel şifrelerinizi asla görmez veya saklamaz. Verilerin nasıl işlendiğine dair tüm detaylar için <a href="privacy.html">Gizlilik Politikası (Privacy Policy)</a> sayfamızı inceleyebilirsiniz.
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div>
+        <a href="privacy.html"><i class="fa-solid fa-shield-halved"></i> Gizlilik Politikası</a>
+      </div>
+      <div>
+        Geliştirici: <a href="https://github.com/olgunugurlu" target="_blank">Olgun Uğurlu</a>
+      </div>
+    </footer>
+
+  </div>
+
 </body>
 </html>
